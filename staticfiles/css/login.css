@@ -1,0 +1,56 @@
+
+.login-logo img {
+    display: none;
+}
+.login-logo {
+    background-image: url('/static/img/logo_cenaped.png'); /* Cambia esto por la ruta real */
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    height: 120px; /* Ajusta según el tamaño de tu logo */
+    margin-bottom: 20px;
+}
+
+
+body.jazzmin-login-page {
+    background-image: url('/static/img/fondo_logui5.jpg');
+    background-size: cover;       /* Hace que cubra toda la pantalla */
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+.card {
+    background-color: rgba(255, 255, 255, 0.1); /* Fondo muy transparente */
+    border: none; /* Sin bordes */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); /* Sombra suave */
+    backdrop-filter: blur(8px); /* Desenfoque del fondo para dar efecto de cristal */
+    -webkit-backdrop-filter: blur(8px); /* Soporte para Safari */
+    border-radius: 12px;
+}
+
+
+/* 🔸 Texto dentro de la card */
+.card-body {
+    color: rgb(20, 20, 20); /* Cambia a otro color si lo deseas */
+    text-align: center;
+    font-size: 1.1rem;
+    font-weight: 400;
+}
+
+/* 🔸 Título o mensaje de bienvenida */
+.login-box-msg {
+    color: #f1ebeb;
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+}
+#jazzy-logo img {
+    display: none !important;
+
+}
+#jazzy-logo {
+   background-image: url("/static/tu_app/img/logo_cenaped.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center left;
+    height: 60px;
+}
+    

@@ -1,0 +1,91 @@
+
+
+
+.login-logo img {
+    max-width: 180px;       /* Aumenta el tamaño */
+    height: auto;
+    margin: 20px auto 10px; /* Centrado y espacio */
+    display: block;
+    border-radius: 0;       /* ❌ Sin bordes redondeados */
+    box-shadow: none;       /* ❌ Sin sombras */
+    background: none;       /* ❌ Sin fondo */
+}
+
+
+
+body.jazzmin-login-page::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-image: url('/static/img/fondo_logui5.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: -1;
+    filter: blur(6px); /* Ajusta el nivel de desenfoque */
+    transform: scale(1.1); /* Para que el borde borroso no se corte */
+}
+
+
+
+.card {
+    background-color: rgba(255, 255, 255, 0.1); /* Fondo translúcido */
+    border: 1px solid rgba(255, 255, 255, 0.6);  /* Borde blanco semi-transparente */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);   /* Sombra suave */
+    backdrop-filter: blur(8px);                 /* Efecto cristal */
+    -webkit-backdrop-filter: blur(8px);         /* Safari */
+    border-radius: 12px;
+}
+
+
+
+/* 🔸 Texto dentro de la card */
+.card-body {
+    color: rgb(20, 20, 20);
+    /* Cambia a otro color si lo deseas */
+    text-align: center;
+    font-size: 1.1rem;
+    font-weight: 400;
+}
+
+/* 🔸 Título o mensaje de bienvenida */
+.login-box-msg {
+    color: #f1ebeb;
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+}
+
+
+/* Sidebar: color azul  */
+.main-sidebar {
+    background-color: #013179 !important; /* Azul eléctrico */
+    box-shadow: none !important; /* Quita sombras */
+    border-right: none !important;
+}
+/* Contenedor del logo */
+#jazzy-logo {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    padding: 10px 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+/* Logo en sí */
+#jazzy-logo img {
+    width: 90px;
+    height: auto;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    margin: 0 auto;
+}
+
+/* Ocultar el texto del logo */
+#jazzy-logo .brand-text {
+    display: none !important;
+}
