@@ -1,0 +1,124 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>Login</title>
+    <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <style>
+        /* ===== Estilos móviles ===== */
+        @media (max-width: 768px) {
+            html, body {
+                margin: 0;
+                padding: 0;
+                height: 100%;
+                overflow: hidden;
+            }
+            .login-image { display: none; }
+            .login-container {
+                position: fixed;
+                top: 0; left: 0;
+                width: 100vw; height: 100vh;
+                display: flex; align-items: center; justify-content: center;
+                background: url("{% static 'fondo-papel-tapiz-artistico-borroso-colorido_58702-8237.avif' %}") no-repeat center center;
+                background-size: cover;
+                padding: 2rem;
+            }
+        }
+        /* ===== Estilos escritorio ===== */
+        body {
+            min-height: 100vh;
+            display: flex;
+        }
+        .login-image {
+            flex: 0 0 65%;
+            background: url("{% static 'LLAMA-ENCENDIDA.jpg' %}") no-repeat center center;
+            background-size: cover;
+        }
+        .login-container {
+            flex: 1;
+            display: flex; align-items: center; justify-content: center;
+            background: url("{% static 'fondo-papel-tapiz-artistico-borroso-colorido_58702-8237.avif' %}") no-repeat center center;
+            background-size: cover;
+            padding: 2rem;
+        }
+        .login-card {
+            background-color: rgba(160, 160, 160, 0.3);
+            border-radius: 20px;
+            padding: 2rem;
+            width: 100%;
+            max-width: 380px;
+            border: 2px solid rgba(198, 198, 198, 0.8);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+        }
+    </style>
+</head>
+<body>
+    <div class="login-image"></div>
+
+    <div class="login-container">
+        <div class="login-card">
+            <div class="text-center mb-4">
+                <img src="{% static 'CENAPED-Logo-01.png' %}" alt="Logo" style="max-height: 80px;" />
+            </div>
+            {% if error %}
+                <div class="alert alert-danger">{{ error }}</div>
+            {% endif %}
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-floating mb-3">
+                    <input id="nombre" class="form-control" name="nombre" type="text" placeholder="Nombre" required />
+                    <label for="nombre">Nombre</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input id="numero_de_documento" class="form-control" name="numero_de_documento" type="number" placeholder="Número de Documento" required />
+                    <label for="numero_de_documento">Número de Documento</label>
+                </div>
+                <div class="d-flex align-items-center justify-content-end mt-4 mb-0">
+                    <button type="submit" class="btn btn-primary w-100">Ingresar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Script de recarga automática si el usuario no está escribiendo -->
+    <script>
+        (function() {
+            let typing = false;
+            let timeout;
+            const RECARGA_MS = 10 * 60 * 1000; // 10 minutos
+
+            function iniciarTemporizador() {
+                timeout = setTimeout(() => {
+                    if (!typing) {
+                        location.reload();
+                    }
+                }, RECARGA_MS);
+            }
+
+            function reiniciarTemporizador() {
+                clearTimeout(timeout);
+                iniciarTemporizador();
+            }
+
+            document.querySelectorAll('input').forEach(input => {
+                input.addEventListener('input', () => {
+                    typing = true;
+                    clearTimeout(timeout);
+                });
+                input.addEventListener('blur', () => {
+                    typing = false;
+                    reiniciarTemporizador();
+                });
+            });
+
+            iniciarTemporizador();
+        })();
+    </script>
+</body>
+</html>

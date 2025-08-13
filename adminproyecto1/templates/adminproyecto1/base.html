@@ -1,0 +1,128 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Dashboard{% endblock %}</title>
+    <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+    <style>
+
+
+
+/* Sidebar más delgado */
+.sb-sidenav {
+    background-color: #194485 !important;
+    width: 169px; /* antes era 180px */
+    transition: width 0.3s ease;
+}
+
+
+        /* Barra superior */
+        .sb-topnav {
+            background-color: #013179 !important;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+        }
+        .sb-sidenav {
+            background-color: #194485 !important;
+        }
+        /* Hover y transición */
+        .nav-link {
+            transition: all 0.2s ease-in-out;
+        }
+        .nav-link:hover {
+            background-color: rgba(255,255,255,0.15);
+            border-radius: 8px;
+        }
+        /* Opción activa */
+        .nav-link.active {
+            background-color: rgba(255,255,255,0.25);
+            border-left: 4px solid #5cc3e2;
+            font-weight: bold;
+        }
+        /* Ícono y texto alineados */
+        .sb-nav-link-icon {
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body class="sb-nav-fixed">
+    <nav class="sb-topnav navbar navbar-expand navbar-dark">
+        <!-- Logo + botón hamburguesa -->
+        <div class="d-flex align-items-center">
+            <a class="navbar-brand ps-3" href="{% url 'index' %}">
+                <img src="{% static 'CENAPED-Logo-01.png' %}" alt="Logo" height="30" />
+            </a>
+            <button class="btn btn-link btn-sm ms-2" id="sidebarToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+
+        <!-- Empujar contenido a la derecha -->
+        <div class="ms-auto"></div>
+
+        <!-- Usuario -->
+        <ul class="navbar-nav d-none d-lg-flex">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" 
+                   data-bs-toggle="dropdown" aria-expanded="false">
+                   <i class="fas fa-user fa-fw"></i> {{ request.session.usuario_nombre }}
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                    <li><a class="dropdown-item text-danger" href="{% url 'logout' %}"><i class="fas fa-sign-out-alt me-2"></i> Cerrar sesión</a></li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+
+    <div id="layoutSidenav">
+        <!-- Sidebar -->
+        <div id="layoutSidenav_nav">
+            <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+                <div class="sb-sidenav-menu">
+                    <div class="nav">
+                        <div class="sb-sidenav-menu-heading">Menú</div>
+                        <a class="nav-link {% if request.resolver_match.url_name == 'index' %}active{% endif %}" href="{% url 'index' %}">
+                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                            Dashboard
+                        </a>
+                        <a class="nav-link {% if request.resolver_match.url_name == 'historial_docente' %}active{% endif %}" href="{% url 'historial_docente' %}">
+                            <div class="sb-nav-link-icon"><i class="fas fa-book"></i></div>
+                            Historial De Formación
+                        </a>
+                        <a class="nav-link {% if request.resolver_match.url_name == 'oferta_formacion' %}active{% endif %}" href="{% url 'oferta_formacion' %}">
+                            <div class="sb-nav-link-icon"><i class="fas fa-graduation-cap"></i></div>
+                            Oferta de Formación
+                        </a>
+                        <!-- Cierre de sesión en móvil -->
+                        <a class="nav-link text-danger d-lg-none" href="{% url 'logout' %}">
+                            <div class="sb-nav-link-icon"><i class="fas fa-sign-out-alt"></i></div>
+                            Cerrar sesión
+                        </a>
+                    </div>
+                </div>
+                <div class="sb-sidenav-footer">
+                    <div class="small">Usuario:</div>
+                    {{ request.session.usuario_nombre }}
+                </div>
+            </nav>
+        </div>
+
+        <!-- Contenido -->
+        <div id="layoutSidenav_content">
+            <main>
+                <div class="container-fluid px-4">
+                    {% block content %}
+                    {% endblock %}
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'js/scripts.js' %}"></script>
+</body>
+</html>

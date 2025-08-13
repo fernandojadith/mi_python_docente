@@ -1,0 +1,86 @@
+{% extends 'adminproyecto1/base.html' %}
+
+{% block title %}Oferta de Formación{% endblock %}
+
+{% block content %}
+<h2 class="mt-4 fw-bold">
+    <i class="fas fa-graduation-cap me-2 text-success"></i>Oferta de Formación
+</h2>
+
+<div class="card border-success mt-4">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-success">
+                    <tr>
+                        <th>ID</th>
+                        <th>Formación</th>
+                        <th>Descripción</th>
+                        <th>Fecha Inicio</th>
+                        <th>Fecha Fin</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for f in formaciones %}
+                    <tr>
+                        <td data-label="ID" class="fw-bold">{{ f.id_formacion }}</td>
+                        <td data-label="Formación">{{ f.formacion }}</td>
+                        <td data-label="Descripción">{{ f.descripcion }}</td>
+                        <td data-label="Fecha Inicio">{{ f.fecha_de_inicio }}</td>
+                        <td data-label="Fecha Fin">{{ f.fecha_fin }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center text-muted">No hay formaciones disponibles.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        border-radius: 15px;
+        box-shadow: none !important;
+    }
+    .table thead th {
+        text-align: center;
+    }
+    .table td, .table th {
+        vertical-align: middle;
+    }
+
+    /* ==== MODO MÓVIL ==== */
+    @media (max-width: 768px) {
+        .table thead {
+            display: none;
+        }
+        .table, .table tbody, .table tr, .table td {
+            display: block;
+            width: 100%;
+        }
+        .table tr {
+            margin-bottom: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 10px;
+            background: #fff;
+        }
+        .table td {
+            text-align: left !important;
+            padding: 8px 10px;
+            border: none !important;
+            position: relative;
+        }
+        .table td::before {
+            content: attr(data-label);
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+            color: #194485;
+        }
+    }
+</style>
+{% endblock %}

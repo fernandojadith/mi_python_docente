@@ -4,20 +4,14 @@ from django.urls import reverse
 from django.contrib.admin.models import LogEntry
 from import_export.admin import ImportExportModelAdmin 
 from .export_resources import UsuarioResource
-from .export_resources import FormacionDocenteResource  # Ajusta el path si es diferente
-# Asegúrate de tener esta importación
+from .export_resources import FormacionDocenteResource 
 from django.contrib.admin import SimpleListFilter
 import datetime
-# Importa tus formularios personalizados si los estás usando
 from .forms import FormacionAdminForm, FormacionDocenteAdminForm
-
-# Importa todos tus modelos
 from .models import Entidad, Formacion, FormacionDocente, Modalidad, Rol, TipoFormacion, Usuario
 
 
-## **Clases `ModelAdmin` Personalizadas**
 
-### **`modalidadAdmin`**
 
 @admin.register(LogEntry)
 class LogEntryAdmin(admin.ModelAdmin):
@@ -28,11 +22,12 @@ class LogEntryAdmin(admin.ModelAdmin):
     
 class modalidadAdmin(admin.ModelAdmin):
     list_display = ("modalidad", "descripcion")
-    
-@admin.register(Usuario) # Usa el decorador para registrar este modelo con su clase Admin
+   #tabla usuario -------------------------------------------------------------------------------------------------- 
+@admin.register(Usuario)
 class usuarioAdmin(ImportExportModelAdmin):
     resource_class = UsuarioResource
     list_display = (
+        "id_usuario",
         "nombre",
         "fecha_de_nacimiento",
         "telefono",
@@ -56,10 +51,6 @@ class usuarioAdmin(ImportExportModelAdmin):
     editar_link.short_description = 'Acciones' # Encabezado de la columna en el Admin
     editar_link.allow_tags = True # Permite que Django renderice HTML en esta columna
     from django.contrib.admin import SimpleListFilter
-import datetime
-
-from django.contrib.admin import SimpleListFilter
-from adminproyecto1.models import Formacion
 import datetime
 
 class PeriodoFilter(SimpleListFilter):
@@ -98,24 +89,16 @@ class PeriodoFilter(SimpleListFilter):
                 return queryset.none()
         return queryset
 
-
-
-
-from django.contrib import admin
-from import_export.admin import ImportExportModelAdmin
-from django.urls import reverse
-from django.utils.html import format_html
-from .models import FormacionDocente, Formacion
-from .forms import FormacionDocenteAdminForm
-
+#tabla formaciondocente ---------------------------------------------------------------------------------------------------------------
 
 @admin.register(FormacionDocente)
 class formaciondocenteAdmin(ImportExportModelAdmin):
     form = FormacionDocenteAdminForm
     resource_class = FormacionDocenteResource
-
+  
     list_filter = ['id_formacion', PeriodoFilter]
     list_display = (
+        'id_formaciondocente',
         'get_usuario_nombre',
         'get_formacion_nombre',
         'estado',
@@ -127,6 +110,23 @@ class formaciondocenteAdmin(ImportExportModelAdmin):
     )
     list_display_links = None
 
+    # 🔍 Buscador: campos reales + ID exacto
+    search_fields = (
+        'estado',
+        'observacion',
+        'id_usuario__nombre',
+        'id_formacion__formacion',  # nombre real del curso
+        'pdf_certificado',
+    )
+
+    def get_search_results(self, request, queryset, search_term):
+        # Primero busca normalmente
+        queryset, use_distinct = super().get_search_results(request, queryset, search_term)
+        # Si el término es numérico, buscar exacto por ID
+        if search_term.isdigit():
+            queryset |= self.model.objects.filter(id_formaciondocente=int(search_term))
+        return queryset, use_distinct
+
     def get_usuario_nombre(self, obj):
         return obj.id_usuario.nombre if obj.id_usuario else "N/A"
     get_usuario_nombre.short_description = 'Nombre de Usuario'
@@ -136,7 +136,6 @@ class formaciondocenteAdmin(ImportExportModelAdmin):
         return obj.id_formacion.formacion if obj.id_formacion else "N/A"
     get_formacion_nombre.short_description = 'Nombre de Formación'
     get_formacion_nombre.admin_order_field = 'id_formacion__formacion'
-
 
     def editar_formaciondocente_link(self, obj):
         url = reverse('admin:adminproyecto1_formaciondocente_change', args=[obj.pk])
@@ -151,25 +150,13 @@ class formaciondocenteAdmin(ImportExportModelAdmin):
         return "Sin fecha"
     periodo.short_description = 'Periodo'
 
-    search_fields = (
-        'estado',
-        'observacion',
-        'id_usuario__nombre',
-        'id_formacion__nombre',  # <-- Usa el nombre real del campo
-        'pdf_certificado',
-    )
-
-
-from django.utils.html import format_html
-from django.urls import reverse
-
-from django.utils.html import format_html
-from django.urls import reverse
+#tabla formacion ------------------------------------------------------------------------------------------------------------
 
 class formacionAdmin(admin.ModelAdmin):
     form = FormacionAdminForm
 
     list_display = (
+        "id_formacion", 
         "formacion", 
         "descripcion", 
         "fecha_de_inicio", 
@@ -204,18 +191,32 @@ class formacionAdmin(admin.ModelAdmin):
         return format_html(f'<a class="button" href="{url}">Editar</a>')
     editar_link.short_description = "Editar"
 
-     
+#tabla entidad ------------------------------------------------------------------------------------------------------------
+
 class entidadAdmin(admin.ModelAdmin):
       list_display = ("nombre", "tipo_de_entidad", "pais", "ciudad", "telefono", "correo",)
       
+#tabla rol -------------------------------------------------------------------------------------------------------------------
+            
+class roldadAdmin(admin.ModelAdmin):       
+    list_display = ("id_rol","tipos_de_rol",)   
+    
+#tabla modalidad -------------------------------------------------------------------------------------------------------------------
+
+class modalidadAdmin(admin.ModelAdmin):     
+    list_display = ("id_modalidad","modalidad","descripcion",)     
+    
+    
+class TipoFormacionAdmin(admin.ModelAdmin):  
+    list_display = ("id_tipo_formacion","formaciones",)      
 # Registra los modelos con sus clases Admin personalizadas.
 # Los modelos registrados con @admin.register (como Usuario y FormacionDocente)
 # NO necesitan un admin.site.register() aquí.
 admin.site.register(Entidad, entidadAdmin)
 admin.site.register(Formacion, formacionAdmin)
 admin.site.register(Modalidad, modalidadAdmin)
-admin.site.register(Rol) # Asumo que Rol no necesita una clase Admin personalizada por ahora
-admin.site.register(TipoFormacion) # Asumo que TipoFormacion tampoco necesita una clase Admin personalizada por ahora
+admin.site.register(Rol,roldadAdmin) # Asumo que Rol no necesita una clase Admin personalizada por ahora
+admin.site.register(TipoFormacion,TipoFormacionAdmin) # Asumo que TipoFormacion tampoco necesita una clase Admin personalizada por ahora
       
 # para cambiar el nombre del panel de django
 admin.site.site_header = "ADMIN "
