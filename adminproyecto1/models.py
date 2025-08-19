@@ -44,6 +44,7 @@ class Formacion(models.Model):
 
     class Meta:
         db_table = 'formacion'
+<<<<<<< HEAD
         
 class FormacionDocente(models.Model):
     id_formaciondocente = models.BigAutoField(db_column='id_FormacionDocente', primary_key=True)
@@ -55,6 +56,21 @@ class FormacionDocente(models.Model):
     fecha_aprobacion = models.DateField(blank=True, null=True)
     pdf_certificado = models.FileField(upload_to='certificados/', blank=True, null=True)
 
+=======
+
+
+class FormacionDocente(models.Model):
+    id_formaciondocente = models.BigIntegerField(db_column='id_FormacionDocente', primary_key=True)  # Field name made lowercase.
+    id_usuario = models.ForeignKey('Usuario', models.DO_NOTHING, db_column='id_usuario', blank=True, null=True)
+    estado = models.CharField(max_length=50, blank=True, null=True)
+    observacion = models.CharField(max_length=200, blank=True, null=True)
+    id_formacion = models.ForeignKey(Formacion, models.DO_NOTHING, db_column='id_formacion', blank=True, null=True)
+    aprobado              = models.BooleanField(default=False)
+    fecha_aprobacion      = models.DateField(blank=True, null=True)
+    pdf_certificado = models.FileField(upload_to='certificados/', blank=True, null=True)
+
+
+>>>>>>> b0021ce30dfd751496c6528ecf6ed53640ac85e7
     class Meta:
         db_table = 'formacion_docente'
 
