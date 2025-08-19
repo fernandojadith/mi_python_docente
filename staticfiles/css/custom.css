@@ -1,0 +1,92 @@
+
+#header {
+    background-color: #3ac4a1;
+    color: white;
+      background-color: transparent !important;
+    box-shadow: none !important;
+    border: none !important;
+   
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    background-image: url("/static/admin/img/header_bg.jpg");
+    background-size: cover;
+    background-position: center;
+}
+
+/* Texto del header */
+#header h1, #header a {
+    color: rgb(245, 240, 240) ;
+}
+
+/* Menú lateral */
+#content-main {
+    background-color: #fbfbfb;
+}
+body.login {
+    background: url("/static/admin/img/fondo_logui5.jpg") no-repeat center center fixed;
+    background-size: cover;
+    }
+
+
+/* Contenedor del formulario */
+body.login #content {
+    background-color: rgba(255, 255, 255, 0.25); /* Blanco semitransparente */
+    border-radius: 20px; /* Bordes redondeados */
+    padding: 30px;
+   background-color: transparent !important;
+    box-shadow: none !important;
+    border: none !important;
+    padding: 0 !important;
+   
+    max-width: 400px;
+    margin: 0 auto;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(8px); /* Efecto vidrio */
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+body.login label {
+    color: white !important; /* o el color que desees */
+    font-weight: bold;
+    font-size: 16px;
+}
+
+
+/* Botón de login */
+body.login input[type="submit"] {
+    background-color: rgba(0, 123, 255, 0.8);
+    color: rgb(253, 251, 251);
+    border: none;
+    
+    border-radius: 10px;
+    padding: 10px;
+    width: 100%;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* Centrado vertical */
+body.login #container {
+    display: flex;
+     background-color: transparent !important;
+    box-shadow: none !important;
+    border: none !important;
+    padding: 0 !important;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}/* Aplica al bloque que contiene el formulario */
+body.login #content-main {
+    background-color: rgba(255, 255, 255, 0.2); /* Transparencia */
+    padding: 30px;
+    background-color: transparent !important;
+    box-shadow: none !important;
+    border: none !important;
+    padding: 0 !important;
+    border-radius: 20px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    backdrop-filter: blur(10px); /* Difumina fondo detrás del bloque */
+    transition: all 0.3s ease;
+}

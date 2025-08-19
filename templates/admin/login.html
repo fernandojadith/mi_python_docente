@@ -1,0 +1,41 @@
+{% extends "admin/login.html" %}
+
+{% block extrastyle %}
+<style>
+    body.login {
+        background-image: url("{% static 'img/fondo-logui5.jpg' %}");
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+
+    .login-box {
+        background-color: rgba(255, 255, 255, 0.9);
+        padding: 2rem;
+        border-radius: 1rem;
+    }
+
+    .login-box .form-control {
+        border-radius: 0.5rem;
+    }
+
+    .login-logo img {
+        max-width: 250px;
+        margin-bottom: 1rem;
+    }
+
+    .login-box .btn-primary {
+        background-color: #004085;
+        border-color: #004085;
+    }
+</style>
+{% endblock %}
+
+{% block branding %}
+<div class="login-logo">
+    <img src="{% static 'img/logo-login.png' %}" alt="Logo CENAPED">
+</div>
+{% endblock %}
+
+{% block content_title %}<h2 class="text-center">Bienvenido al sistema de gestión de formación</h2>{% endblock %}
+

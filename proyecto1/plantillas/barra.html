@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+   <ul>
+
+<li>home</li>
+<li>quienes somos</li>
+<li>contacto</li>
+<li>servicio</li>
+<li>aserca de</li>
+
+   </ul> 
+</body>
+</html>
+
+
+
+class usuarioAdmin(admin.ModelAdmin):
+ list_display=("nombre", "fecha_de_nacimiento", "telefono", "numero_de_documento", "lugar_de_residencia", "titulo_de_pregrado", "titulo_de_nivel_maximo", "tipo_de_vinculo", "fecha_de_ingreso", "id_rol")
+ search_fields=("nombre","numero_de_documento",)
+    
+from django.utils.html import format_html
+from django.urls import reverse
+from django.contrib import admin
+from .models import Usuario
+class usuarioAdmin(admin.ModelAdmin):
+    list_display = (
+        "nombre", "fecha_de_nacimiento","telefono", "numero_de_documento","lugar_de_residencia","titulo_de_pregrado","titulo_de_nivel_maximo","tipo_de_vinculo","fecha_de_ingreso",
+        "id_rol","editar_link",  # nueva columna tipo botón
+    ) 
+    list_display_links = None  # para que no se pueda hacer clic en el nombre directamente
+
+    def editar_link(self, obj):
+        url = reverse('admin:adminproyecto1_usuario_change', args=[obj.pk])
+        return format_html('<a class="button" href="{}">Editar</a>', url)
+
+    editar_link.short_description = 'Acciones'
+    editar_link.allow_tags = True
+
+admin.site.register(Entidad,entidadAdmin)
+admin.site.register(Formacion,formacionAdmin)
+admin.site.register(FormacionDocente,formaciondocenteAdmin)
+admin.site.register(Modalidad,modalidadAdmin)
+admin.site.register(Rol)
+admin.site.register(TipoFormacion)
+admin.site.register(Usuario,usuarioAdmin)

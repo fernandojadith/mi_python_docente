@@ -1,0 +1,27 @@
+{% extends "admin/login.html" %}
+
+{% block title %}Iniciar sesión - CENAPED{% endblock %}
+
+{% block content %}
+  <div class="custom-login">
+    <h2 style="text-align: center;">Bienvenido al sistema CENAPED</h2>
+    <form method="post" action="{% url 'admin:login' %}">
+        {% csrf_token %}
+        <div>
+            <label for="id_username">Usuario:</label>
+            {{ form.username }}
+        </div>
+        <div>
+            <label for="id_password">Contraseña:</label>
+            {{ form.password }}
+        </div>
+        {% if form.errors %}
+          <p style="color: red;">Usuario o contraseña incorrectos.</p>
+        {% endif %}
+        <div style="text-align: center; margin-top: 10px;">
+            <input type="submit" value="Ingresar" class="btn btn-primary">
+        </div>
+    </form>
+  </div>
+{% endblock %}
+
