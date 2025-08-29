@@ -4,7 +4,8 @@
 
 {% block content %}
 <h2 class="mt-4 fw-bold">
-    <i class="fas fa-graduation-cap me-2 text-success"></i>Oferta de Formación
+    <i class="fas fa-graduation-cap me-2 text-success"></i>
+    Oferta de Formación - Periodo {{ periodo_actual }}
 </h2>
 
 <div class="card border-success mt-4">
@@ -18,20 +19,22 @@
                         <th>Descripción</th>
                         <th>Fecha Inicio</th>
                         <th>Fecha Fin</th>
+                        <th>Periodo</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for f in formaciones %}
+                    {% for formacion in formaciones %}
                     <tr>
-                        <td data-label="ID" class="fw-bold">{{ f.id_formacion }}</td>
-                        <td data-label="Formación">{{ f.formacion }}</td>
-                        <td data-label="Descripción">{{ f.descripcion }}</td>
-                        <td data-label="Fecha Inicio">{{ f.fecha_de_inicio }}</td>
-                        <td data-label="Fecha Fin">{{ f.fecha_fin }}</td>
+                        <td data-label="ID" class="fw-bold">{{ formacion.id_formacion }}</td>
+                        <td data-label="Formación">{{ formacion.formacion }}</td>
+                        <td data-label="Descripción">{{ formacion.descripcion }}</td>
+                        <td data-label="Fecha Inicio">{{ formacion.fecha_de_inicio }}</td>
+                        <td data-label="Fecha Fin">{{ formacion.fecha_fin }}</td>
+                        <td data-label="Periodo">{{ formacion.periodo }}</td>
                     </tr>
                     {% empty %}
                     <tr>
-                        <td colspan="5" class="text-center text-muted">No hay formaciones disponibles.</td>
+                        <td colspan="6" class="text-center text-muted">No hay formaciones disponibles.</td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -50,6 +53,7 @@
     }
     .table td, .table th {
         vertical-align: middle;
+        text-align: center;
     }
 
     /* ==== MODO MÓVIL ==== */

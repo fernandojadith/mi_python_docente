@@ -22,44 +22,41 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for f in formaciones %}
-                    <tr>
-                        <td data-label="ID" class="fw-bold">{{ f.id_formaciondocente }}</td>
-                        <td data-label="Formación">{{ f.id_formacion }}</td>
-                        <td data-label="Estado">
-                            {% if f.estado == "Completado" %}
-                                <span class="badge bg-success">{{ f.estado }}</span>
-                            {% elif f.estado == "En Progreso" %}
-                                <span class="badge bg-warning text-dark">{{ f.estado }}</span>
-                            {% else %}
-                                <span class="badge bg-secondary">{{ f.estado }}</span>
-                            {% endif %}
-                        </td>
-                        <td data-label="Observación">{{ f.observacion }}</td>
-                        <td data-label="Aprobado">
-                            {% if f.aprobado %}
-                                <span class="text-success fw-bold">Sí</span>
-                            {% else %}
-                                <span class="text-danger fw-bold">No</span>
-                            {% endif %}
-                        </td>
-                        <td data-label="Fecha Aprobación">{{ f.fecha_aprobacion }}</td>
-                        <td data-label="Periodo">{{ f.periodo }}</td>
-                        <td data-label="Certificado">
-                            {% if f.pdf_certificado %}
-                                <a href="{{ f.pdf_certificado.url }}" download class="text-danger" title="Descargar certificado">
-                                    <i class="fas fa-file-pdf fa-2x"></i>
-                                </a>
-                            {% else %}
-                                <span class="text-muted">No disponible</span>
-                            {% endif %}
-                        </td>
-                    </tr>
-                    {% empty %}
-                    <tr>
-                        <td colspan="6" class="text-center text-muted">No hay formaciones registradas</td>
-                    </tr>
-                    {% endfor %}
+                   {% for f in formaciones %}
+    {% if f.estado == "finalizado" %}
+        <tr>
+            <td data-label="ID" class="fw-bold">{{ f.id_formaciondocente }}</td>
+            <td data-label="Formación">{{ f.id_formacion }}</td>
+            <td data-label="Estado">
+                <span class="badge bg-success">Finalizado</span>
+            </td>
+            <td data-label="Observación">{{ f.observacion }}</td>
+            <td data-label="Aprobado">
+                {% if f.aprobado %}
+                    <span class="text-success fw-bold">Sí</span>
+                {% else %}
+                    <span class="text-danger fw-bold">No</span>
+                {% endif %}
+            </td>
+            <td data-label="Fecha Aprobación">{{ f.fecha_aprobacion }}</td>
+            <td data-label="Periodo">{{ f.periodo }}</td>
+            <td data-label="Certificado">
+                {% if f.pdf_certificado %}
+                    <a href="{{ f.pdf_certificado.url }}" download class="text-danger" title="Descargar certificado">
+                        <i class="fas fa-file-pdf fa-2x"></i>
+                    </a>
+                {% else %}
+                    <span class="text-muted">No disponible</span>
+                {% endif %}
+            </td>
+        </tr>
+    {% endif %}
+{% empty %}
+    <tr>
+        <td colspan="8" class="text-center text-muted">No hay formaciones registradas</td>
+    </tr>
+{% endfor %}
+
                 </tbody>
             </table>
         </div>
@@ -73,9 +70,11 @@
     }
     .table thead th {
         text-align: center;
+        
     }
     .table td, .table th {
         vertical-align: middle;
+        text-align: center; /* ✅ Asegura que todo se centre */
     }
     .fa-file-pdf {
         transition: transform 0.2s ease-in-out;

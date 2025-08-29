@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 from pathlib import Path
 import os
-
+from import_export.formats.base_formats import CSV, TSV, JSON, HTML, XLS, XLSX
 # 🔧 1. Directorio base
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -99,8 +99,8 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 # 🌐 11. Idioma y zona horaria
-LANGUAGE_CODE = 'en-us'
-TIME_ZONE = 'UTC'
+LANGUAGE_CODE = 'es'
+TIME_ZONE = 'America/Bogota'
 USE_I18N = True
 USE_TZ = True
 
@@ -126,3 +126,14 @@ JAZZMIN_SETTINGS = {
     "copyright": "CENAPED © 2025",
 }
 
+# 📦 14. Configuración de django-import-export
+IMPORT_EXPORT_USE_TRANSACTIONS = True
+
+IMPORT_EXPORT_FORMATS = [
+    CSV,
+    TSV,
+    JSON,
+    HTML,
+    XLS,
+    XLSX,
+]

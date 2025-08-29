@@ -10,16 +10,12 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" />
 
     <style>
-
-
-
-/* Sidebar más delgado */
-.sb-sidenav {
-    background-color: #194485 !important;
-    width: 169px; /* antes era 180px */
-    transition: width 0.3s ease;
-}
-
+        /* Sidebar más delgado */
+        .sb-sidenav {
+            background-color: #194485 !important;
+            width: 169px; /* antes era 180px */
+            transition: width 0.3s ease;
+        }
 
         /* Barra superior */
         .sb-topnav {
@@ -97,6 +93,13 @@
                             <div class="sb-nav-link-icon"><i class="fas fa-graduation-cap"></i></div>
                             Oferta de Formación
                         </a>
+
+                        <!-- 🚀 Nuevo enlace -->
+                        <a class="nav-link {% if request.resolver_match.url_name == 'mis_formaciones' %}active{% endif %}" href="{% url 'mis_formaciones' %}">
+                            <div class="sb-nav-link-icon"><i class="fas fa-user-check"></i></div>
+                            Mis Formaciones
+                        </a>
+                      
                         <!-- Cierre de sesión en móvil -->
                         <a class="nav-link text-danger d-lg-none" href="{% url 'logout' %}">
                             <div class="sb-nav-link-icon"><i class="fas fa-sign-out-alt"></i></div>

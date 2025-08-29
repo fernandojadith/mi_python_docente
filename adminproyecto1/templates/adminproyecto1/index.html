@@ -10,18 +10,19 @@
 
 <div class="mt-3">
     <p>
-        Esta plataforma está diseñada para que los docentes puedan consultar su historial de formaciones, descargar sus certificados y conocer las próximas oportunidades de capacitación disponibles.
+        Esta plataforma está diseñada para que los docentes puedan consultar su historial de formaciones, 
+        conocer las capacitaciones actuales y descargar sus certificados disponibles.
     </p>
 </div>
 
 <div class="row mt-4">
-    <!-- Formación Docente -->
-    <div class="col-md-6 mb-4">
+    <!-- Historial de Formación -->
+    <div class="col-md-4 mb-4">
         <a href="{% url 'historial_docente' %}" class="text-decoration-none">
             <div class="card h-100 border-primary shadow-lg card-hover">
                 <div class="card-body text-center">
                     <h4 class="card-title text-primary">
-                        <i class="fas fa-book me-2"></i>Historial De Formación 
+                        <i class="fas fa-book me-2"></i>Historial de Formación
                     </h4>
                     <p class="card-text text-dark">
                         Consulta tu historial de capacitaciones realizadas y descarga tus certificados disponibles.
@@ -32,7 +33,7 @@
     </div>
 
     <!-- Oferta de Formación -->
-    <div class="col-md-6 mb-4">
+    <div class="col-md-4 mb-4">
         <a href="{% url 'oferta_formacion' %}" class="text-decoration-none">
             <div class="card h-100 border-success shadow-lg card-hover">
                 <div class="card-body text-center">
@@ -41,6 +42,22 @@
                     </h4>
                     <p class="card-text text-dark">
                         Descubre las capacitaciones disponibles, con descripciones, fechas y modalidades.
+                    </p>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <!-- Mis Formaciones -->
+    <div class="col-md-4 mb-4">
+        <a href="{% url 'mis_formaciones' %}" class="text-decoration-none">
+            <div class="card h-100 shadow-lg card-hover border-warning-custom">
+                <div class="card-body text-center">
+                    <h4 class="card-title text-warning">
+                        <i class="fas fa-user-check me-2"></i>Mis Formaciones
+                    </h4>
+                    <p class="card-text text-dark">
+                        Revisa las formaciones en las que estás inscrito en el periodo actual y su estado (cursando o finalizado).
                     </p>
                 </div>
             </div>
@@ -61,6 +78,12 @@
     .card-hover:hover {
         transform: translateY(-5px);
         box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Borde amarillo personalizado */
+    .border-warning-custom {
+        border: 2px solid #ffc107 !important;
+        border-radius: 15px;
     }
 </style>
 {% endblock %}

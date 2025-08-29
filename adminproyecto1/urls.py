@@ -21,15 +21,15 @@ from django.conf.urls.static import static
 from django.urls import path
 from . import views
 urlpatterns = [
-       path('', views.index, name='index'),
-    path('login/', views.login_view, name='login'),
+    path('', views.login_view, name='login'),   # ⬅️ ahora la raíz muestra el login
+    path('index/', views.index, name='index'),  # ⬅️ dashboard lo pones en /index/
     path('logout/', views.logout_view, name='logout'),
+    path("mis-formaciones/", views.mis_formaciones, name="mis_formaciones"),
     path('historial/', views.historial_docente, name='historial_docente'),
     path('oferta/', views.oferta_formacion, name='oferta_formacion'),
-
     # 1️⃣  Ruta del panel de administración
     path('admin/', admin.site.urls),
-    path('', views.index, name='dashboard'),  # aquí le pones el nombre 'dashboard'
+      # aquí le pones el nombre 'dashboard'
     # 2️⃣  (Opcional) rutas de tu app principal
     # path('', include('adminproyecto1.urls')),
 ]
