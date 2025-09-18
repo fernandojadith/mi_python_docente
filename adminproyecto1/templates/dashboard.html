@@ -1,0 +1,732 @@
+{% extends "admin/base_site.html" %}
+
+{% block title %}Panel de Control{% endblock %}
+
+{% block content %}
+<div style="padding: 30px;">
+
+    <h1 style="font-size: 32px; font-weight: bold; margin-bottom: 50px; color: #1a1a1a;">
+        Panel de Control 📊 
+    </h1>
+
+    
+
+    <!-- ============================
+          📊 GRÁFICO 1: POR FORMACIÓN (Periodo actual)
+          ============================ -->
+    <h2 style="font-size: 40px; text-align: center; margin-bottom: 20px; color:#0052cc; font-weight:bold;">
+        Aprobados por formación (Periodo actual)
+    </h2>
+
+    <p style="font-size: 18px; margin-bottom: 25px;">
+        <strong>Periodo actual:</strong> {{ periodo }}
+    </p>
+
+    <p style="font-size:18px; font-weight:bold; margin-bottom:15px; color:#0052cc;">
+        Total aprobados: {{ total_aprobados_formacion }}
+    </p>
+
+    <table style="width:100%; border-collapse:collapse; margin-bottom:20px;">
+        <tr>
+        {% for f in formaciones %}
+            <td style="padding:10px; border:1px solid #ddd; font-size:16px; font-weight:600; color:#333; text-align:center;">
+                {{ f.formacion }}
+                <div style="margin-top:6px; display:inline-block; background:#0052cc; color:white; font-weight:bold; padding:4px 10px; border-radius:6px;">
+                    {{ f.aprobados }}
+                </div>
+            </td>
+            {% if forloop.counter|divisibleby:4 %}</tr><tr>{% endif %}
+        {% endfor %}
+        </tr>
+    </table>
+
+    <!-- Datos (label: valor) que refleja la gráfica 1 -->
+    <div id="formacionesData" style="margin-bottom:12px; font-size:15px; color:#333;"></div>
+
+    <div style="background:white; border-radius: 12px; padding: 25px; margin-bottom: 60px; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+        <canvas id="formacionesChart" width="600" height="200"></canvas>
+    </div>
+
+    <hr style="margin:50px 0; border:5px solid #ddd;">
+
+    <!-- ============================
+          📊 GRÁFICO 2: HISTÓRICO POR FORMACIÓN
+          ============================ -->
+    <h2 style="font-size: 40px; text-align: center; margin-bottom: 50px; color:#0052cc; font-weight:bold;">Histórico de aprobados por formación</h2>
+
+    <form method="get" style="margin-bottom:20px; display:flex; gap:15px; align-items:center; flex-wrap:wrap;">
+        <label for="año"><strong>Año:</strong></label>
+        <select name="año" id="año" style="padding:6px 12px; border-radius:6px; border:1px solid #ccc;">
+            <option value="">--- Selecciona año ---</option>
+            {% for año in años_opciones %}
+                <option value="{{ año }}" {% if año_filtro == año %}selected{% endif %}>{{ año }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="opcion"><strong>Filtro:</strong></label>
+        <select name="opcion" id="opcion" style="padding:6px 12px; border-radius:6px; border:1px solid #ccc;">
+            <option value="">--- Selecciona opción ---</option>
+            {% for op in opciones_filtro %}
+                <option value="{{ op.value }}" {% if opcion_filtro == op.value %}selected{% endif %}>{{ op.label }}</option>
+            {% endfor %}
+        </select>
+
+        <button type="submit" style="padding:6px 15px; background:#0052cc; color:white; border:none; border-radius:6px; font-weight:bold; cursor:pointer;">
+            Aplicar filtros
+        </button>
+    </form>
+
+    <p style="font-size:18px; font-weight:bold; margin-bottom:12px; color:#0052cc;">
+        Total aprobados: {{ total_aprobados_formacion_hist }}
+    </p>
+
+    <!-- Datos (label: valor) que refleja la gráfica 2 -->
+    <div id="formacionesHistData" style="margin-bottom:12px; font-size:15px; color:#333;"></div>
+
+    <div style="background:white; border-radius: 12px; padding: 25px; margin-bottom: 60px; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+        <canvas id="formacionesHistChart" width="600" height="200"></canvas>
+    </div>
+
+    <hr style="margin:50px 0; border:5px solid #ddd;">
+
+    <!-- ============================
+          📊 GRÁFICO 3: POR ÁREA
+          ============================ -->
+    <h2 style="font-size: 40px; text-align: center; margin-bottom: 50px; color:#0052cc; font-weight:bold;">Programas Aprobados por área</h2>
+
+    <form method="get" style="margin-bottom:20px; display:flex; gap:15px; align-items:center; flex-wrap:wrap;">
+        <label for="programa"><strong>Programa:</strong></label>
+        <select name="programa" id="programa" style="padding:6px 12px; border-radius:6px; border:1px solid #ccc;">
+            <option value="">Todos los programas</option>
+            {% for prog in programas %}
+                <option value="{{ prog.id_programa }}" {% if prog.id_programa|stringformat:"s" == request.GET.programa %}selected{% endif %}>
+                    {{ prog.Programa }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <label for="año_area"><strong>Año:</strong></label>
+        <select name="año_area" id="año_area" style="padding:6px 12px; border-radius:6px; border:1px solid #ccc;">
+            <option value="">--- Selecciona año ---</option>
+            {% for año in años_opciones %}
+                <option value="{{ año }}" {% if año_area == año %}selected{% endif %}>{{ año }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="momento_area"><strong>Momento:</strong></label>
+        <select name="momento_area" id="momento_area" style="padding:6px 12px; border-radius:6px; border:1px solid #ccc;">
+            <option value="">--- Selecciona opción ---</option>
+            {% for op in opciones_filtro %}
+                <option value="{{ op.value }}" {% if momento_area == op.value %}selected{% endif %}>{{ op.label }}</option>
+            {% endfor %}
+        </select>
+
+        <button type="submit" style="padding:6px 15px; background:#0052cc; color:white; border:none; border-radius:6px; font-weight:bold; cursor:pointer;">
+            Aplicar filtros
+        </button>
+    </form>
+
+    <p style="font-size:18px; font-weight:bold; margin-bottom:12px; color:#0052cc;">
+        Total aprobados: {{ total_aprobados_area }}
+    </p>
+
+    <!-- Datos (label: valor) que refleja la gráfica 3 -->
+    <div id="areasData" style="margin-bottom:12px; font-size:15px; color:#333;"></div>
+
+    <div style="background:white; border-radius: 12px; padding: 25px; margin-bottom:60px; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+        <canvas id="areasChart" width="600" height="200"></canvas>
+    </div>
+
+    <hr style="margin:50px 0; border:5px solid #ddd;">
+
+    <!-- ============================
+          📊 GRÁFICO 4: POR FORMACIÓN (con filtro)
+          ============================ -->
+    <h2 style="font-size: 40px; text-align: center; margin-bottom: 50px; color:#0052cc; font-weight:bold;">Porgramas Aprobados por formación </h2>
+
+    <form method="get" style="margin-bottom:20px; display:flex; gap:15px; align-items:center; flex-wrap:wrap;">
+        <label for="programa_formacion"><strong>Programa:</strong></label>
+        <select name="programa_formacion" id="programa_formacion" style="padding:6px 12px; border-radius:6px; border:1px solid #ccc;">
+            <option value="">Todos los programas</option>
+            {% for prog in programas %}
+                <option value="{{ prog.id_programa }}" {% if prog.id_programa|stringformat:"s" == request.GET.programa_formacion %}selected{% endif %}>
+                    {{ prog.Programa }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <label for="año_formacion"><strong>Año:</strong></label>
+        <select name="año_formacion" id="año_formacion" style="padding:6px 12px; border-radius:6px; border:1px solid #ccc;">
+            <option value="">--- Selecciona año ---</option>
+            {% for año in años_opciones %}
+                <option value="{{ año }}" {% if año_formacion == año %}selected{% endif %}>{{ año }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="momento_formacion"><strong>Momento:</strong></label>
+        <select name="momento_formacion" id="momento_formacion" style="padding:6px 12px; border-radius:6px; border:1px solid #ccc;">
+            <option value="">--- Selecciona opción ---</option>
+            {% for op in opciones_filtro %}
+                <option value="{{ op.value }}" {% if momento_formacion == op.value %}selected{% endif %}>{{ op.label }}</option>
+            {% endfor %}
+        </select>
+
+        <button type="submit" style="padding:6px 15px; background:#0052cc; color:white; border:none; border-radius:6px; font-weight:bold; cursor:pointer;">
+            Aplicar filtros
+        </button>
+    </form>
+
+    <p style="font-size:18px; font-weight:bold; margin-bottom:12px; color:#0052cc;">
+        Total aprobados: {{ total_aprobados_formacion_filtro }}
+    </p>
+
+    <!-- Datos (label: valor) que refleja la gráfica 4 -->
+    <div id="formacionesFiltroData" style="margin-bottom:12px; font-size:15px; color:#333;"></div>
+
+    <div style="background:white; border-radius: 12px; padding: 25px; margin-bottom:60px; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+        <canvas id="formacionesFiltroChart" width="600" height="200"></canvas>
+    </div>
+
+    <hr style="margin:50px 0; border:5px solid #ddd;">
+
+    <!-- ============================
+          📊 GRÁFICO 5: DOCENTES CON Y SIN FORMACIÓN POR FACULTAD (PASTEL DERECHA)
+          ============================ -->
+    <h2 style="font-size: 40px; text-align: center; margin-bottom: 50px; color:#0052cc; font-weight:bold;">Docentes con formación por facultad</h2>
+
+    <form method="get" style="margin-bottom:20px; display:flex; gap:15px; align-items:center; flex-wrap:wrap;">
+        <label for="facultad"><strong>Facultad:</strong></label>
+        <select name="facultad" id="facultad" style="padding:6px 12px; border-radius:6px; border:1px solid #ccc;">
+            <option value="">--- Selecciona facultad ---</option>
+            {% for fac in facultades %}
+                <option value="{{ fac.id_facultad }}" {% if fac.id_facultad|stringformat:"s" == request.GET.facultad %}selected{% endif %}>{{ fac.facultad }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="año_facultad"><strong>Año:</strong></label>
+        <select name="año_facultad" id="año_facultad" style="padding:6px 12px; border-radius:6px; border:1px solid #ccc;">
+            <option value="">--- Selecciona año ---</option>
+            {% for año in años_opciones %}
+                <option value="{{ año }}" {% if año_facultad == año %}selected{% endif %}>{{ año }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="momento_facultad"><strong>Momento:</strong></label>
+        <select name="momento_facultad" id="momento_facultad" style="padding:6px 12px; border-radius:6px; border:1px solid #ccc;">
+            <option value="">--- Selecciona opción ---</option>
+            {% for op in opciones_filtro %}
+                <option value="{{ op.value }}" {% if momento_facultad == op.value %}selected{% endif %}>{{ op.label }}</option>
+            {% endfor %}
+        </select>
+
+        <button type="submit" style="padding:6px 15px; background:#0052cc; color:white; border:none; border-radius:6px; font-weight:bold; cursor:pointer;">
+            Aplicar filtros
+        </button>
+    </form>
+
+    <p style="font-size:18px; font-weight:bold; margin-bottom:12px; color:#0052cc;">
+        Total docentes: {{ total_docentes_facultad }} | Con formación: {{ docentes_con_formacion }}
+    </p>
+
+    <!-- Datos (label: valor) que refleja la gráfica 5 (pie) -->
+    <div id="facultadData" style="margin-bottom:12px; font-size:15px; color:#333;"></div>
+
+    <div style="display:flex; justify-content:center; align-items:center;">
+            <div style="width: 600px; height: 600px; background:white; border-radius: 12px; padding: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+    <canvas id="facultadChart"></canvas>
+</div>
+
+        </div>
+
+
+    <hr style="margin:50px 0; border:5px solid #ddd;">
+    
+
+    <!-- ============================
+      📊 GRÁFICO 6 : ÁREAS POR FACULTAD
+      ============================ -->
+<h2 style="font-size: 40px; text-align: center; margin-bottom: 50px; color:#0052cc; font-weight:bold;">
+    Aprobados por área dentro de una Facultad
+</h2>
+
+<form method="get" style="margin-bottom:20px; display:flex; gap:15px; align-items:center; flex-wrap:wrap;">
+    <label for="facultad_area"><strong>Facultad:</strong></label>
+    <select name="facultad_area" id="facultad_area" style="padding:6px 12px; border-radius:6px; border:1px solid #ccc;">
+        <option value="">--- Selecciona facultad ---</option>
+        {% for fac in facultades %}
+            <option value="{{ fac.id_facultad }}" {% if fac.id_facultad|stringformat:"s" == facultad_area %}selected{% endif %}>{{ fac.facultad }}</option>
+        {% endfor %}
+    </select>
+
+    <label for="año_area_fac"><strong>Año:</strong></label>
+    <select name="año_area_fac" id="año_area_fac" style="padding:6px 12px; border-radius:6px; border:1px solid #ccc;">
+        <option value="">--- Selecciona año ---</option>
+        {% for año in años_opciones %}
+            <option value="{{ año }}" {% if año_area_fac == año %}selected{% endif %}>{{ año }}</option>
+        {% endfor %}
+    </select>
+
+    <label for="momento_area_fac"><strong>Momento:</strong></label>
+    <select name="momento_area_fac" id="momento_area_fac" style="padding:6px 12px; border-radius:6px; border:1px solid #ccc;">
+        <option value="">--- Selecciona opción ---</option>
+        {% for op in opciones_filtro %}
+            <option value="{{ op.value }}" {% if momento_area_fac == op.value %}selected{% endif %}>{{ op.label }}</option>
+        {% endfor %}
+    </select>
+
+    <button type="submit" style="padding:6px 15px; background:#0052cc; color:white; border:none; border-radius:6px; font-weight:bold; cursor:pointer;">
+        Aplicar filtros
+    </button>
+</form>
+
+<p style="font-size:18px; font-weight:bold; margin-bottom:12px; color:#0052cc;">
+    Total aprobados: {{ total_aprobados_area_fac }}
+</p>
+
+<!-- Datos (label: valor) -->
+<div id="areasFacData" style="margin-bottom:12px; font-size:15px; color:#333;"></div>
+
+<div style="background:white; border-radius: 12px; padding: 25px; margin-bottom:60px; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+    <canvas id="areasFacChart" width="600" height="200"></canvas>
+</div>
+
+
+<hr style="margin:50px 0; border:5px solid #ddd;">
+
+<!-- ============================
+  📊 GRÁFICO 7 : PROGRAMAS POR FACULTAD
+  ============================ -->
+<h2 style="font-size: 40px; text-align: center; margin-bottom: 50px; color:#0052cc; font-weight:bold;">
+    Aprobados por programa dentro de una Facultad
+</h2>
+
+<form method="get" style="margin-bottom:20px; display:flex; gap:15px; align-items:center; flex-wrap:wrap;">
+    <label for="facultad_programa"><strong>Facultad:</strong></label>
+    <select name="facultad_programa" id="facultad_programa" style="padding:6px 12px; border-radius:6px; border:1px solid #ccc;">
+        <option value="">--- Selecciona facultad ---</option>
+        {% for fac in facultades %}
+            <option value="{{ fac.id_facultad }}" {% if fac.id_facultad|stringformat:"s" == facultad_programa %}selected{% endif %}>
+                {{ fac.facultad }}
+            </option>
+        {% endfor %}
+    </select>
+
+    <label for="año_programa_fac"><strong>Año:</strong></label>
+    <select name="año_programa_fac" id="año_programa_fac" style="padding:6px 12px; border-radius:6px; border:1px solid #ccc;">
+        <option value="">--- Selecciona año ---</option>
+        {% for año in años_opciones %}
+            <option value="{{ año }}" {% if año_programa_fac == año %}selected{% endif %}>{{ año }}</option>
+        {% endfor %}
+    </select>
+
+    <label for="momento_programa_fac"><strong>Momento:</strong></label>
+    <select name="momento_programa_fac" id="momento_programa_fac" style="padding:6px 12px; border-radius:6px; border:1px solid #ccc;">
+        <option value="">--- Selecciona opción ---</option>
+        {% for op in opciones_filtro %}
+            <option value="{{ op.value }}" {% if momento_programa_fac == op.value %}selected{% endif %}>
+                {{ op.label }}
+            </option>
+        {% endfor %}
+    </select>
+
+    <button type="submit" style="padding:6px 15px; background:#0052cc; color:white; border:none; border-radius:6px; font-weight:bold; cursor:pointer;">
+        Aplicar filtros
+    </button>
+</form>
+
+<p style="font-size:18px; font-weight:bold; margin-bottom:12px; color:#0052cc;">
+    Total aprobados: {{ total_aprobados_programa_fac }}
+</p>
+
+<!-- Datos (label: valor) -->
+<div id="programasFacData" style="margin-bottom:12px; font-size:15px; color:#333;"></div>
+
+<div style="background:white; border-radius: 12px; padding: 25px; margin-bottom:60px; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+    <canvas id="programasFacChart" width="600" height="200"></canvas>
+</div>
+
+<hr style="margin:50px 0; border:5px solid #ddd;">
+
+<!-- ============================
+  📊 GRÁFICO 8 : FORMACIONES POR FACULTAD
+  ============================ -->
+<h2 style="font-size: 40px; text-align: center; margin-bottom: 50px; color:#0052cc; font-weight:bold;">
+    Aprobados por formación dentro de una Facultad
+</h2>
+
+<form method="get" style="margin-bottom:20px; display:flex; gap:15px; align-items:center; flex-wrap:wrap;">
+    <label for="facultad_formacion"><strong>Facultad:</strong></label>
+    <select name="facultad_formacion" id="facultad_formacion" style="padding:6px 12px; border-radius:6px; border:1px solid #ccc;">
+        <option value="">--- Selecciona facultad ---</option>
+        {% for fac in facultades %}
+            <option value="{{ fac.id_facultad }}" {% if fac.id_facultad|stringformat:"s" == facultad_formacion %}selected{% endif %}>
+                {{ fac.facultad }}
+            </option>
+        {% endfor %}
+    </select>
+
+    <label for="año_formacion_fac"><strong>Año:</strong></label>
+    <select name="año_formacion_fac" id="año_formacion_fac" style="padding:6px 12px; border-radius:6px; border:1px solid #ccc;">
+        <option value="">--- Selecciona año ---</option>
+        {% for año in años_opciones %}
+            <option value="{{ año }}" {% if año_formacion_fac == año %}selected{% endif %}>{{ año }}</option>
+        {% endfor %}
+    </select>
+
+    <label for="momento_formacion_fac"><strong>Momento:</strong></label>
+    <select name="momento_formacion_fac" id="momento_formacion_fac" style="padding:6px 12px; border-radius:6px; border:1px solid #ccc;">
+        <option value="">--- Selecciona opción ---</option>
+        {% for op in opciones_filtro %}
+            <option value="{{ op.value }}" {% if momento_formacion_fac == op.value %}selected{% endif %}>
+                {{ op.label }}
+            </option>
+        {% endfor %}
+    </select>
+
+    <button type="submit" style="padding:6px 15px; background:#0052cc; color:white; border:none; border-radius:6px; font-weight:bold; cursor:pointer;">
+        Aplicar filtros
+    </button>
+</form>
+
+<p style="font-size:18px; font-weight:bold; margin-bottom:12px; color:#0052cc;">
+    Total aprobados: {{ total_aprobados_formacion_fac }}
+</p>
+
+<!-- Datos (label: valor) -->
+<div id="formacionesFacData" style="margin-bottom:12px; font-size:15px; color:#333;"></div>
+
+<div style="background:white; border-radius: 12px; padding: 25px; margin-bottom:60px; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+    <canvas id="formacionesFacChart" width="600" height="200"></canvas>
+</div>
+
+
+<hr style="margin:50px 0; border:5px solid #ddd;">
+
+
+
+
+
+
+
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+
+<script>
+    function wrapLabel(label, maxLength = 20) {
+        if (!label) return label;
+        if (label.length > maxLength) {
+            return label.match(new RegExp('.{1,' + maxLength + '}', 'g'));
+        }
+        return label;
+    }
+
+    // Función para sanitizar/parsing del JSON que envía Django (mantengo tu enfoque original)
+    function getSafeJson(djangoVar) {
+        try {
+            return JSON.parse(djangoVar.replace(/'/g, '"'));
+        } catch (e) {
+            // si ya viene como objeto, devolverlo
+            return djangoVar;
+        }
+    }
+
+    // Renderiza arriba del canvas un pequeño listado "label: valor"
+    function renderChartData(containerId, labelsDjangoVar, valuesDjangoVar) {
+        var labels = getSafeJson(labelsDjangoVar) || [];
+        var values = getSafeJson(valuesDjangoVar) || [];
+        var container = document.getElementById(containerId);
+        if (!container) return;
+        if (!labels.length) {
+            container.innerHTML = '<p style="color:#888; margin:0;">Sin datos</p>';
+            return;
+        }
+        var html = '<div style="display:flex; flex-wrap:wrap; gap:8px;">';
+        for (var i = 0; i < labels.length; i++) {
+            var lab = labels[i] === null ? 'Sin nombre' : labels[i];
+            var val = (values[i] !== undefined && values[i] !== null) ? values[i] : 0;
+            html += '<div style="background:#f6f8fb; padding:6px 10px; border-radius:8px; font-weight:600; color:#333;">' +
+                        lab + ': ' +
+                        '<span style="background:#0052cc; color:white; padding:2px 8px; border-radius:6px; margin-left:8px; font-weight:700;">' + val + '</span>' +
+                    '</div>';
+        }
+        html += '</div>';
+        container.innerHTML = html;
+    }
+
+    // === Render datos arriba de cada gráfica ===
+    renderChartData('formacionesData', '{{ chart_labels_formacion|safe }}', '{{ chart_values_formacion|safe }}');
+    renderChartData('formacionesHistData', '{{ chart_labels_formacion_hist|safe }}', '{{ chart_values_formacion_hist|safe }}');
+    renderChartData('areasData', '{{ chart_labels_area|safe }}', '{{ chart_values_area|safe }}');
+    renderChartData('formacionesFiltroData', '{{ chart_labels_formacion_filtro|safe }}', '{{ chart_values_formacion_filtro|safe }}');
+    renderChartData('facultadData', '{{ chart_labels_facultad|safe }}', '{{ chart_values_facultad|safe }}');
+
+    // === Gráficos (mantengo tu lógica original para Chart.js) ===
+
+    // Gráfico 1
+    const chartData1 = getSafeJson('{{ chart_labels_formacion|safe }}');
+    const chartValues1 = getSafeJson('{{ chart_values_formacion|safe }}');
+    new Chart(document.getElementById('formacionesChart').getContext('2d'), {
+        type: 'bar',
+        data: {
+            labels: chartData1.map(label => wrapLabel(label)),
+            datasets: [{
+                label: 'Aprobados',
+                data: chartValues1,
+                backgroundColor: '#0052cc'
+            }]
+        },
+        options: { 
+        responsive: true, 
+        plugins: { legend: { display: false } },
+        scales: {
+            y: {
+                beginAtZero: true,
+                ticks: {
+                    stepSize: 1,
+                    callback: function(value) {
+                        return Number.isInteger(value) ? value : null;
+                    }
+                }
+            }
+        }
+    }
+    });
+    // Función para actualizar por AJAX (sin refrescar la página)
+async function updateChart1() {
+    const response = await fetch("/chart1/data/");
+    const data = await response.json();
+
+    chart1.data.labels = data.labels;
+    chart1.data.datasets[0].data = data.values;
+    chart1.update();
+
+    document.getElementById("formacionesData").innerHTML =
+        "<b>Total aprobados:</b> " + data.total;
+}
+
+    // Gráfico 2
+    const chartData2 = getSafeJson('{{ chart_labels_formacion_hist|safe }}');
+    const chartValues2 = getSafeJson('{{ chart_values_formacion_hist|safe }}');
+    new Chart(document.getElementById('formacionesHistChart').getContext('2d'), {
+        type: 'bar',
+        data: {
+            labels: chartData2.map(label => wrapLabel(label)),
+            datasets: [{
+                label: 'Aprobados',
+                data: chartValues2,
+                backgroundColor: '#0052cc'
+            }]
+        },
+        options: { 
+        responsive: true, 
+        plugins: { legend: { display: false } },
+        scales: {
+            y: {
+                beginAtZero: true,
+                ticks: {
+                    stepSize: 1,
+                    callback: function(value) {
+                        return Number.isInteger(value) ? value : null;
+                    }
+                }
+            }
+        }
+    }
+    });
+
+    // Gráfico 3
+    const chartData3 = getSafeJson('{{ chart_labels_area|safe }}');
+    const chartValues3 = getSafeJson('{{ chart_values_area|safe }}');
+    new Chart(document.getElementById('areasChart').getContext('2d'), {
+        type: 'bar',
+        data: {
+            labels: chartData3.map(label => wrapLabel(label)),
+            datasets: [{
+                label: 'Aprobados',
+                data: chartValues3,
+                backgroundColor: '#0052cc'
+            }]
+        },
+        options: { 
+        responsive: true, 
+        plugins: { legend: { display: false } },
+        scales: {
+            y: {
+                beginAtZero: true,
+                ticks: {
+                    stepSize: 1,
+                    callback: function(value) {
+                        return Number.isInteger(value) ? value : null;
+                    }
+                }
+            }
+        }
+    }
+    });
+
+    // Gráfico 4
+    const chartData4 = getSafeJson('{{ chart_labels_formacion_filtro|safe }}');
+    const chartValues4 = getSafeJson('{{ chart_values_formacion_filtro|safe }}');
+    new Chart(document.getElementById('formacionesFiltroChart').getContext('2d'), {
+        type: 'bar',
+        data: {
+            labels: chartData4.map(label => wrapLabel(label)),
+            datasets: [{
+                label: 'Aprobados',
+                data: chartValues4,
+                backgroundColor: '#0052cc'
+            }]
+        },
+        options: { 
+        responsive: true, 
+        plugins: { legend: { display: false } },
+        scales: {
+            y: {
+                beginAtZero: true,
+                ticks: {
+                    stepSize: 1,
+                    callback: function(value) {
+                        return Number.isInteger(value) ? value : null;
+                    }
+                }
+            }
+        }
+    }
+    });
+
+    // Gráfico 5 (pastel)
+    const chartData5 = getSafeJson('{{ chart_labels_facultad|safe }}');
+    const chartValues5 = getSafeJson('{{ chart_values_facultad|safe }}');
+
+new Chart(document.getElementById('facultadChart').getContext('2d'), {
+    type: 'pie',
+    data: {
+        labels: chartData5,
+        datasets: [{
+            label: 'Docentes',
+            data: chartValues5,
+            backgroundColor: ['#0052cc','#28a745']
+        }]
+    },
+    options: { 
+        responsive: true, 
+        plugins: { 
+            legend: { position:'bottom' },
+            datalabels: {
+                color: '#fff',
+                font: { weight: 'bold', size: 14 },
+                formatter: function(value, ctx) {
+                    let sum = ctx.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+                    let percentage = (value * 100 / sum).toFixed(1) + "%";
+                    return percentage;
+                }
+            }
+        } 
+    },
+    plugins: [ChartDataLabels]   // 👈 ACTIVAR EL PLUGIN
+});
+
+// Render datos de la nueva gráfica
+renderChartData('areasFacData', '{{ chart_labels_area_fac|safe }}', '{{ chart_values_area_fac|safe }}');
+
+// Nueva gráfica (áreas por facultad)
+const chartDataAF = getSafeJson('{{ chart_labels_area_fac|safe }}');
+const chartValuesAF = getSafeJson('{{ chart_values_area_fac|safe }}');
+new Chart(document.getElementById('areasFacChart').getContext('2d'), {
+    type: 'bar',
+    data: {
+        labels: chartDataAF.map(label => wrapLabel(label)),
+        datasets: [{
+            label: 'Aprobados',
+            data: chartValuesAF,
+            backgroundColor: '#28a745'
+        }]
+    },
+    options: { 
+        responsive: true, 
+        plugins: { legend: { display: false } },
+        scales: {
+            y: {
+                beginAtZero: true,
+                ticks: {
+                    stepSize: 1,
+                    callback: function(value) {
+                        return Number.isInteger(value) ? value : null;
+                    }
+                }
+            }
+        }
+    }
+});
+// Render datos de la gráfica 7
+renderChartData('programasFacData', '{{ chart_labels_programa_fac|safe }}', '{{ chart_values_programa_fac|safe }}');
+
+// Nueva gráfica (programas por facultad)
+const chartDataPF = getSafeJson('{{ chart_labels_programa_fac|safe }}');
+const chartValuesPF = getSafeJson('{{ chart_values_programa_fac|safe }}');
+new Chart(document.getElementById('programasFacChart').getContext('2d'), {
+    type: 'bar',
+    data: {
+        labels: chartDataPF.map(label => wrapLabel(label)),
+        datasets: [{
+            label: 'Aprobados',
+            data: chartValuesPF,
+            backgroundColor: '#ff9800'
+        }]
+    },
+    options: { 
+        responsive: true, 
+        plugins: { legend: { display: false } },
+        scales: {
+            y: {
+                beginAtZero: true,
+                ticks: {
+                    stepSize: 1,
+                    callback: function(value) {
+                        return Number.isInteger(value) ? value : null;
+                    }
+                }
+            }
+        }
+    }
+});
+// Render datos de la gráfica 8
+renderChartData('formacionesFacData', '{{ chart_labels_formacion_fac|safe }}', '{{ chart_values_formacion_fac|safe }}');
+
+// Nueva gráfica (formaciones por facultad)
+const chartDataFF = getSafeJson('{{ chart_labels_formacion_fac|safe }}');
+const chartValuesFF = getSafeJson('{{ chart_values_formacion_fac|safe }}');
+new Chart(document.getElementById('formacionesFacChart').getContext('2d'), {
+    type: 'bar',
+    data: {
+        labels: chartDataFF.map(label => wrapLabel(label)),
+        datasets: [{
+            label: 'Aprobados',
+            data: chartValuesFF,
+            backgroundColor: '#9c27b0'
+        }]
+    },
+    options: { 
+        responsive: true, 
+        plugins: { legend: { display: false } },
+        scales: {
+            y: {
+                beginAtZero: true,
+                ticks: {
+                    stepSize: 1,
+                    callback: function(value) {
+                        return Number.isInteger(value) ? value : null;
+                    }
+                }
+            }
+        }
+    }
+});
+
+
+
+</script>
+{% endblock %}

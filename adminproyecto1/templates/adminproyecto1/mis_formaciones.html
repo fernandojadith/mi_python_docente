@@ -1,0 +1,56 @@
+{% extends "adminproyecto1/base.html" %}
+{% block content %}
+
+<h2 class="mt-4 fw-bold text-dark">
+    <i class="fas fa-user-check me-2 text-warning"></i> 
+    <span class="text-dark">Mis Formaciones</span>
+</h2>
+
+
+<div class="card mt-4 border-primary">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle text-center">
+                <thead class="table-primary">
+                    <tr>
+                        <th>Formación</th>
+                        <th>Usuario</th>
+                        <th>Estado</th>
+                        <th>Periodo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for f in formaciones %}
+                    <tr>
+                        <td>{{ f.id_formacion }}</td>
+                        <td>{{ f.id_usuario.nombre }}</td>
+                        <td>
+                            {% if f.estado == "cursando" %}
+                                <span class="badge bg-warning text-dark">Cursando</span>
+                            {% elif f.estado == "finalizado" %}
+                                <span class="badge bg-success">Finalizado</span>
+                            {% endif %}
+                        </td>
+                        <td data-label="Periodo">{{ f.id_formacion.periodo }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="text-center text-muted">
+                            No tienes formaciones registradas
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        border-radius: 15px;
+        box-shadow: none !important;
+    }
+</style>
+
+{% endblock %}

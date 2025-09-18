@@ -1,0 +1,88 @@
+{% extends "admin/base_site.html" %}
+
+{% block title %}Inscritos por Área{% endblock %}
+
+{% block content %}
+<div style="padding: 30px;">
+  <h1 style="font-size: 24px; font-weight: bold; margin-bottom: 25px; color: #1a1a1a;">
+    👥 Inscritos por Área (según Programa)
+  </h1>
+
+  <!-- Dropdown de programas (opcional, si quieres filtrar) -->
+  <form method="get" style="margin-bottom:20px;">
+    <label for="programa"><strong>Selecciona un Programa:</strong></label>
+    <select name="programa" id="programa" onchange="this.form.submit()">
+      <option value="">-- Seleccionar --</option>
+      {% for programa in programas %}
+        <option value="{{ programa.id_programa }}" {% if programa.id_programa|stringformat:"s" == programa_seleccionado %}selected{% endif %}>
+          {{ programa.Programa }}
+        </option>
+      {% endfor %}
+    </select>
+  </form>
+
+  <!-- 🔹 Gráfica general por formación -->
+  <div style="background:white; border-radius: 12px; padding: 25px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); margin-bottom:30px;">
+    <h3>Total aprobados por formación</h3>
+    <canvas id="formacionesChart" width="600" height="250"></canvas>
+  </div>
+
+  <!-- 🔹 Gráficas dinámicas por área -->
+  {% for area in areas_data %}
+  <div style="background:white; border-radius: 12px; padding: 25px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); margin-bottom:30px;">
+    <h3>Docentes aprobados en el área: {{ area.area }}</h3>
+    <canvas id="chartArea{{ forloop.counter }}" width="600" height="250"></canvas>
+  </div>
+  {% endfor %}
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- 🔹 Gráfica principal de formaciones -->
+<script>
+const ctxFormaciones = document.getElementById('formacionesChart').getContext('2d');
+new Chart(ctxFormaciones, {
+    type: 'bar',
+    data: {
+        labels: {{ chart_labels|safe }},
+        datasets: [{
+            label: 'Aprobados',
+            data: {{ chart_values|safe }},
+            backgroundColor: {{ chart_colors|safe }},
+            borderColor: 'rgba(0,0,0,0.1)',
+            borderWidth: 1
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: { y: { beginAtZero: true, stepSize: 1 } }
+    }
+});
+</script>
+
+<!-- 🔹 Gráficas dinámicas por área -->
+<script>
+{% for area in areas_data %}
+const ctx{{ forloop.counter }} = document.getElementById('chartArea{{ forloop.counter }}').getContext('2d');
+new Chart(ctx{{ forloop.counter }}, {
+    type: 'bar',
+    data: {
+        labels: {{ area.labels|safe }},
+        datasets: [{
+            label: 'Docentes aprobados',
+            data: {{ area.values|safe }},
+            backgroundColor: 'rgba(0, 123, 255, 0.7)',
+            borderColor: 'rgba(0, 82, 204, 1)',
+            borderWidth: 1
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: { y: { beginAtZero: true, stepSize: 1 } }
+    }
+});
+{% endfor %}
+</script>
+{% endblock %}
