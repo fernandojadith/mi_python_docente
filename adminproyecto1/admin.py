@@ -70,7 +70,6 @@ class FacultadFilter(admin.SimpleListFilter):
             return queryset.filter(id_programa__id_facultad__id_facultad=self.value())
         return queryset
 
-
 @admin.register(Usuario)
 class usuarioAdmin(ImportExportModelAdmin):
     """
@@ -95,9 +94,11 @@ class usuarioAdmin(ImportExportModelAdmin):
         "activo",
         "editar_link",
     )
-    list_per_page = 10
+
+    # 📌 Igual que en FormacionDocente
+    list_per_page = 8  # solo 5 filas por página
     list_display_links = None
-    list_max_show_all = 0
+    list_max_show_all = 0  # quita botón "Mostrar todo"
 
     search_fields = (
         "nombre",
@@ -106,7 +107,7 @@ class usuarioAdmin(ImportExportModelAdmin):
         "id_programa__id_facultad__facultad",
     )
 
-    # 👇 ahora el filtro de Facultad es personalizado y funciona bien junto a Activo
+    # 👇 Filtro de Facultad funciona bien junto a Activo
     list_filter = ("activo", FacultadFilter, "id_programa")
 
     actions = ["marcar_activo", "marcar_inactivo"]
@@ -323,37 +324,36 @@ class formaciondocenteAdmin(ImportExportModelAdmin):
         return "Sin fecha"
     
 #tabla formacion ------------------------------------------------------------------------------------------------------------
-
-class formacionAdmin(admin.ModelAdmin):
+@admin.register(Formacion)
+class FormacionAdmin(admin.ModelAdmin):
     form = FormacionAdminForm
 
     list_display = (
-        "id_formacion", 
-        "formacion", 
-        "descripcion", 
-        "fecha_de_inicio", 
+        "id_formacion",
+        "formacion",
+        "descripcion",
+        "fecha_de_inicio",
         "fecha_fin",
         "momento",
-        "mostrar_modalidad", 
-        "mostrar_entidad", 
-        "mostrar_tipo_formacion", 
-        "mostrar_usuario", 
-        "num_aprobados",# Docente
+        "mostrar_modalidad",
+        "mostrar_entidad",
+        "mostrar_tipo_formacion",
+        "mostrar_usuario",
+        "num_aprobados",  # cantidad de docentes aprobados
         "editar_link",
     )
-
     list_display_links = None
-   
+    list_per_page = 5   # 👈 Paginación
+    list_max_show_all = 0  # 👈 Desactiva “mostrar todos”
 
-     # método para contar los aprobados de cada formación
+    # === MÉTODOS PERSONALIZADOS ===
     def num_aprobados(self, obj):
+        """Cuenta los docentes aprobados en esta formación"""
         return FormacionDocente.objects.filter(
             id_formacion=obj,
             aprobado=True
         ).count()
     num_aprobados.short_description = "Aprobados"
-
-
 
     def mostrar_modalidad(self, obj):
         return obj.id_modalidad
@@ -373,8 +373,9 @@ class formacionAdmin(admin.ModelAdmin):
 
     def editar_link(self, obj):
         url = reverse("admin:adminproyecto1_formacion_change", args=[obj.pk])
-        return format_html(f'<a class="button" href="{url}">Editar</a>')
-    editar_link.short_description = "Editar"
+        return format_html('<a class="button" href="{}">Editar</a>', url)
+    editar_link.short_description = "Acciones"
+    editar_link.allow_tags = True
 
 #tabla entidad ------------------------------------------------------------------------------------------------------------
 
@@ -399,7 +400,7 @@ class TipoFormacionAdmin(admin.ModelAdmin):
 # Los modelos registrados con @admin.register (como Usuario y FormacionDocente)
 # NO necesitan un admin.site.register() aquí.
 admin.site.register(Entidad, entidadAdmin)
-admin.site.register(Formacion, formacionAdmin)
+
 admin.site.register(Modalidad, modalidadAdmin)
 admin.site.register(Rol,roldadAdmin) # Asumo que Rol no necesita una clase Admin personalizada por ahora
 admin.site.register(TipoFormacion,TipoFormacionAdmin) # Asumo que TipoFormacion tampoco necesita una clase Admin personalizada por ahora
