@@ -1,0 +1,13 @@
+# Archivos de Python
+__pycache__/
+*.pyc
+
+# Migraciones compiladas
+*.pyo
+*.pyd
+
+# Archivos de certificados PDF
+media/certificados/
+
+# Archivos estáticos compilados
+static/js/

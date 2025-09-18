@@ -18,13 +18,14 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-
+from adminproyecto1 import views  # importa tus vistas
 urlpatterns = [
    
     # 1️⃣  Ruta del panel de administración
     path('admin/', admin.site.urls),
     path('', include('adminproyecto1.urls')),  # 👉 conecta tu plantilla
-    # 2️⃣  (Opcional) rutas de tu app principal
+    path("dashboard/", views.dashboard, name="admin-dashboard"),  # 👈 mismo name
+    
     # path('', include('adminproyecto1.urls')),
 ]
 

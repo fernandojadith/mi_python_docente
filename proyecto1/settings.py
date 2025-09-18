@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 from pathlib import Path
 import os
 from import_export.formats.base_formats import CSV, TSV, JSON, HTML, XLS, XLSX
+
 # 🔧 1. Directorio base
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -109,24 +110,57 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # 🎨 13. Jazzmin (configuración del panel admin)
 JAZZMIN_SETTINGS = {
-    "site_title": "Panel de Administración",
+    "site_title": "Panel de Control",
     "site_header": "Administración CENAPED",
     "welcome_sign": "Bienvenido al sistema de gestión de formación",
     "login_logo": "img/logo_cenaped.png",
     "site_logo": "img/logo_cenaped.png",
     "site_logo_classes": "img-circle elevation-3",
-    "site_brand": "",
+    "site_brand": "CENAPED",
     "site_icon": "img/logo_cenaped.png",
+
+    # 📂 Archivos personalizados (css/js)
     "custom_css": "css/login.css",
+    "custom_js": "js/pepito.js",
+
+    # 📌 Navegación
     "show_sidebar": True,
     "navigation_expanded": True,
+
+    # 🔗 Menú superior
     "topmenu_links": [
         {"name": "Inicio", "url": "admin:index", "permissions": ["auth.view_user"]},
+        {"name": "Dashboard", "url": "admin-dashboard", "icon": "fas fa-chart-line"},
     ],
+
+    # 📌 Menú lateral con íconos
+    "icons": {
+        "auth": "fas fa-users",
+        "auth.user": "fas fa-user",
+        "auth.Group": "fas fa-users-cog",
+        "adminproyecto1.Adminproyecto1": "fas fa-cogs",
+        "adminproyecto1.Areas": "fas fa-th-large",
+        "adminproyecto1.BitacoraDocente": "fas fa-book-open",
+        "adminproyecto1.Entidad": "fas fa-building",
+        "adminproyecto1.Facultad": "fas fa-university",
+        "adminproyecto1.FormacionDocente": "fas fa-chalkboard-teacher",
+        "adminproyecto1.Formacion": "fas fa-book",
+        "adminproyecto1.Modalidad": "fas fa-exchange-alt",
+        "adminproyecto1.Programa": "fas fa-project-diagram",
+        "adminproyecto1.Rol": "fas fa-user-tag",
+        "adminproyecto1.TipoFormacion": "fas fa-list-alt",
+        "adminproyecto1.Usuario": "fas fa-users",
+    
+    },
+
     "copyright": "CENAPED © 2025",
 }
 
-# 📦 14. Configuración de django-import-export
+# 🎨 14. Ajustes visuales extra de Jazzmin
+
+
+
+# 📦 15. Configuración de django-import-export
 IMPORT_EXPORT_USE_TRANSACTIONS = True
 
 IMPORT_EXPORT_FORMATS = [
